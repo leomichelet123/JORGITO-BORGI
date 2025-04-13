@@ -36,43 +36,25 @@ JMP	INICIO
 JMP ISR_TIMER1_COMPB
 
 .ORG 0x0024
-JMP	ISR_RX
 
-.INCLUDE "division8.inc"
-frase0:.DB " VALOR DE INDICADOR CO: ",13,10
-frase1:.DB " VALOR DE INDICADOR TEMPERATURA: ",13,10,0
-frase2:.DB " VALOR DE INDICADOR DE GASES: ",13,10
-frase3:.DB " VALOR DE INDICADOR DE HUMEDAD: ",13,10
-frase4:.DB " VALOR DE INDICADOR DE PARTICULAS: ",13,10,0
-frase5:.DB " CON LA LETRA C SE SELECCIONA EL MODO CAMBIAR UMBRALES. ",13,10
-frase6:.DB " PARA SELECCIONAR EL UMBRAL A CAMBIAR MEDIANTE LAS SIGUIENTES LETRAS: ",13,10
-frase7:.DB " C = UMBRAL DE AVISO DE CO ",13,10,0
-frase8:.DB " T = UMBRAL DE AVISO TEMPERATURA ",13,10,0
-frase9:.DB " G = UMBRAL DE AVISO DE GASES ",13,10
-frase10:.DB "H = UMBRAL DE AVISO DE HUMEDAD ",13,10,0
-frase11:.DB "P = UMBRAL DE AVISO DE PARTICULAS ",13,10	
-frase12:.DB " ES NUMERO: ",13,10
-frase13:.DB " ES MAYUSCULA: ",13,10,0
-frase14:.DB " ES MINUSCULA: ",13,10,0
-frase15:.DB " ?: ",13,10 
 
-; Tabla de clasificación de caracteres
+; Tabla de clasificaciï¿½n de caracteres
 char_table:
-    .DB 0, 0, 0, 0, 0, 0, 0, 0 ; Caracteres no válidos (0-7)
-    .DB 0, 0, 0, 0, 0, 0, 0, 0 ; Caracteres no válidos (8-15)
-    .DB 0, 0, 0, 0, 0, 0, 0, 0 ; Caracteres no válidos (16-23)
-    .DB 0, 0, 0, 0, 0, 0, 0, 0 ; Caracteres no válidos (24-31)
-    .DB 0, 0, 0, 0, 0, 0, 0, 0 ; Espacios y símbolos (32-39)
-    .DB 1, 1, 1, 1, 1, 1, 1, 1 ; Números (48-55)
-    .DB 1, 1, 0, 0, 0, 0, 0, 0 ; Números (56-63) y otros
-    .DB 2, 2, 2, 2, 2, 2, 2, 2 ; Letras mayúsculas (65-71)
-    .DB 2, 2, 2, 2, 2, 2, 2, 2 ; Letras mayúsculas (72-79)
-    .DB 2, 2, 2, 2, 2, 2, 2, 2 ; Letras mayúsculas (80-87)
-    .DB 2, 2, 2, 0, 0, 0, 0, 0 ; Letras mayúsculas (88-95) y otros
-    .DB 3, 3, 3, 3, 3, 3, 3, 3 ; Letras minúsculas (97-103)
-    .DB 3, 3, 3, 3, 3, 3, 3, 3 ; Letras minúsculas (104-111)
-    .DB 3, 3, 3, 3, 3, 3, 3, 3 ; Letras minúsculas (112-119)
-    .DB 3, 3, 3, 0, 0, 0, 0, 0 ; Letras minúsculas (120-127) y otros
+    .DB 0, 0, 0, 0, 0, 0, 0, 0 ; Caracteres no vï¿½lidos (0-7)
+    .DB 0, 0, 0, 0, 0, 0, 0, 0 ; Caracteres no vï¿½lidos (8-15)
+    .DB 0, 0, 0, 0, 0, 0, 0, 0 ; Caracteres no vï¿½lidos (16-23)
+    .DB 0, 0, 0, 0, 0, 0, 0, 0 ; Caracteres no vï¿½lidos (24-31)
+    .DB 0, 0, 0, 0, 0, 0, 0, 0 ; Espacios y sï¿½mbolos (32-39)
+    .DB 1, 1, 1, 1, 1, 1, 1, 1 ; Nï¿½meros (48-55)
+    .DB 1, 1, 0, 0, 0, 0, 0, 0 ; Nï¿½meros (56-63) y otros
+    .DB 2, 2, 2, 2, 2, 2, 2, 2 ; Letras mayï¿½sculas (65-71)
+    .DB 2, 2, 2, 2, 2, 2, 2, 2 ; Letras mayï¿½sculas (72-79)
+    .DB 2, 2, 2, 2, 2, 2, 2, 2 ; Letras mayï¿½sculas (80-87)
+    .DB 2, 2, 2, 0, 0, 0, 0, 0 ; Letras mayï¿½sculas (88-95) y otros
+    .DB 3, 3, 3, 3, 3, 3, 3, 3 ; Letras minï¿½sculas (97-103)
+    .DB 3, 3, 3, 3, 3, 3, 3, 3 ; Letras minï¿½sculas (104-111)
+    .DB 3, 3, 3, 3, 3, 3, 3, 3 ; Letras minï¿½sculas (112-119)
+    .DB 3, 3, 3, 0, 0, 0, 0, 0 ; Letras minï¿½sculas (120-127) y otros
 INICIO:
 
 LDS R16, dato_recibido
@@ -169,14 +151,14 @@ VOLVER:
     CPI R16,70           ; Comparar con 'F' (Enviar Alarma de Humedad)
     BREQ ENVIAR_ALARMA_HUMEDAD
 
-    CPI R16,81           ; Comparar con 'Q' (Enviar Alarma de Partículas)
+    CPI R16,81           ; Comparar con 'Q' (Enviar Alarma de Partï¿½culas)
     BREQ ENVIAR_ALARMA_PARTICULAS
 
     RJMP SALTO_LINEA           ; Si no coincide con ninguna letra, seguir en el loop
 
 	; Subrutinas para enviar los valores de las alarmas
 ENVIAR_ALARMA_CO:
-    LDI ZH, HIGH(2*frase0) ; Cargar la dirección de la frase "ALARMA DE CO"
+    LDI ZH, HIGH(2*frase0) ; Cargar la direcciï¿½n de la frase "ALARMA DE CO"
     LDI ZL, LOW(2*frase0)
     LDI R17, 26            ; Longitud de la frase
     CALL strings           ; Enviar la frase
@@ -187,7 +169,7 @@ ENVIAR_ALARMA_CO:
     RJMP SALTO_LINEA
 
 ENVIAR_ALARMA_TEMP:
-    LDI ZH, HIGH(2*frase1) ; Cargar la dirección de la frase "ALARMA DE TEMPERATURA"
+    LDI ZH, HIGH(2*frase1) ; Cargar la direcciï¿½n de la frase "ALARMA DE TEMPERATURA"
     LDI ZL, LOW(2*frase1)
     LDI R17, 35            ; Longitud de la frase
     CALL strings           ; Enviar la frase
@@ -198,7 +180,7 @@ ENVIAR_ALARMA_TEMP:
     RJMP SALTO_LINEA
 
 ENVIAR_ALARMA_GASES:
-    LDI ZH, HIGH(2*frase2) ; Cargar la dirección de la frase "ALARMA DE GASES"
+    LDI ZH, HIGH(2*frase2) ; Cargar la direcciï¿½n de la frase "ALARMA DE GASES"
     LDI ZL, LOW(2*frase2)
     LDI R17, 32            ; Longitud de la frase
     CALL strings           ; Enviar la frase
@@ -209,7 +191,7 @@ ENVIAR_ALARMA_GASES:
     RJMP SALTO_LINEA
 
 ENVIAR_ALARMA_HUMEDAD:
-    LDI ZH, HIGH(2*frase3) ; Cargar la dirección de la frase "ALARMA DE HUMEDAD"
+    LDI ZH, HIGH(2*frase3) ; Cargar la direcciï¿½n de la frase "ALARMA DE HUMEDAD"
     LDI ZL, LOW(2*frase3)
     LDI R17, 34            ; Longitud de la frase
     CALL strings           ; Enviar la frase
@@ -220,18 +202,18 @@ ENVIAR_ALARMA_HUMEDAD:
     RJMP SALTO_LINEA
 
 ENVIAR_ALARMA_PARTICULAS:
-    LDI ZH, HIGH(2*frase4) ; Cargar la dirección de la frase "ALARMA DE PARTICULAS"
+    LDI ZH, HIGH(2*frase4) ; Cargar la direcciï¿½n de la frase "ALARMA DE PARTICULAS"
     LDI ZL, LOW(2*frase4)
     LDI R17, 38            ; Longitud de la frase
     CALL strings           ; Enviar la frase
-    LDS R24, ALARMA_PARTICULAS ; Cargar el valor de la alarma de Partículas
+    LDS R24, ALARMA_PARTICULAS ; Cargar el valor de la alarma de Partï¿½culas
     CALL DESARMAR_ENVIAR   ; Enviar el valor
 	CLR R16                ; Limpiar R16
 	STS dato_recibido, R16 ; Limpiar dato_recibido
 
 	SALTO_LINEA:
 
-	 ; Verificar qué letra se recibió y enviar el valor correspondiente
+	 ; Verificar quï¿½ letra se recibiï¿½ y enviar el valor correspondiente
     CPI R16,88           ; Comparar con 'X' (Enviar Umbral de CO)
     BREQ ENVIAR_UMBRAL_CO
 
@@ -244,7 +226,7 @@ ENVIAR_ALARMA_PARTICULAS:
     CPI R16,87           ; Comparar con 'W' (Enviar Umbral de Humedad)
     BREQ ENVIAR_UMBRAL_HUMEDAD
 
-    CPI R16,86         ; Comparar con 'V' (Enviar Umbral de Partículas)
+    CPI R16,86         ; Comparar con 'V' (Enviar Umbral de Partï¿½culas)
     BREQ ENVIAR_UMBRAL_PARTICULAS
 
     CLR R16
@@ -253,7 +235,7 @@ ENVIAR_ALARMA_PARTICULAS:
 
 ; Subrutinas para enviar los valores de los umbrales
 ENVIAR_UMBRAL_CO:
-    LDI ZH, HIGH(2*frase7) ; Cargar la dirección de la frase "UMBRAL DE AVISO DE CO"
+    LDI ZH, HIGH(2*frase7) ; Cargar la direcciï¿½n de la frase "UMBRAL DE AVISO DE CO"
     LDI ZL, LOW(2*frase7)
     LDI R17, 30            ; Longitud de la frase
     CALL strings           ; Enviar la frase
@@ -264,7 +246,7 @@ ENVIAR_UMBRAL_CO:
     RJMP VOLVER
 
 ENVIAR_UMBRAL_TEMP:
-    LDI ZH, HIGH(2*frase8) ; Cargar la dirección de la frase "UMBRAL DE AVISO DE TEMPERATURA"
+    LDI ZH, HIGH(2*frase8) ; Cargar la direcciï¿½n de la frase "UMBRAL DE AVISO DE TEMPERATURA"
     LDI ZL, LOW(2*frase8)
     LDI R17, 35            ; Longitud de la frase
     CALL strings           ; Enviar la frase
@@ -275,7 +257,7 @@ ENVIAR_UMBRAL_TEMP:
     RJMP VOLVER
 
 ENVIAR_UMBRAL_GASES:
-    LDI ZH, HIGH(2*frase9) ; Cargar la dirección de la frase "UMBRAL DE AVISO DE GASES"
+    LDI ZH, HIGH(2*frase9) ; Cargar la direcciï¿½n de la frase "UMBRAL DE AVISO DE GASES"
     LDI ZL, LOW(2*frase9)
     LDI R17, 32            ; Longitud de la frase
     CALL strings           ; Enviar la frase
@@ -286,7 +268,7 @@ ENVIAR_UMBRAL_GASES:
     RJMP VOLVER
 
 ENVIAR_UMBRAL_HUMEDAD:
-    LDI ZH, HIGH(2*frase10) ; Cargar la dirección de la frase "UMBRAL DE AVISO DE HUMEDAD"
+    LDI ZH, HIGH(2*frase10) ; Cargar la direcciï¿½n de la frase "UMBRAL DE AVISO DE HUMEDAD"
     LDI ZL, LOW(2*frase10)
     LDI R17, 33            ; Longitud de la frase
     CALL strings           ; Enviar la frase
@@ -297,11 +279,11 @@ ENVIAR_UMBRAL_HUMEDAD:
     RJMP VOLVER
 
 ENVIAR_UMBRAL_PARTICULAS:
-    LDI ZH, HIGH(2*frase11) ; Cargar la dirección de la frase "UMBRAL DE AVISO DE PARTICULAS"
+    LDI ZH, HIGH(2*frase11) ; Cargar la direcciï¿½n de la frase "UMBRAL DE AVISO DE PARTICULAS"
     LDI ZL, LOW(2*frase11)
     LDI R17, 33            ; Longitud de la frase
     CALL strings           ; Enviar la frase
-    LDS R24, AVISO_PARTICULAS ; Cargar el valor del umbral de aviso de Partículas
+    LDS R24, AVISO_PARTICULAS ; Cargar el valor del umbral de aviso de Partï¿½culas
     CALL DESARMAR_ENVIAR   ; Enviar el valor
 	CLR R16                ; Limpiar R16
 	STS dato_recibido, R16 ; Limpiar dato_recibido
@@ -427,13 +409,13 @@ ISR_RX:
     BRLO OTRO_CARACTER
     CPI R17, 128
     BRGE OTRO_CARACTER
-    ; Clasificar el carácter usando la tabla
+    ; Clasificar el carï¿½cter usando la tabla
     LDI ZH, HIGH(char_table)
     LDI ZL, LOW(char_table)
-    ADD ZL, R17 ; Ajustar el índice
+    ADD ZL, R17 ; Ajustar el ï¿½ndice
     LPM R18, Z  ; Cargar el valor de la tabla en R18
 
-    ; Clasificar según el valor de la tabla
+    ; Clasificar segï¿½n el valor de la tabla
     CPI R18, 1
     BREQ ES_NUMERO
     CPI R18, 2
@@ -443,9 +425,9 @@ ISR_RX:
     RJMP OTRO_CARACTER
 
 ES_NUMERO:
-    ; Convertir el carácter numérico a un valor entero
+    ; Convertir el carï¿½cter numï¿½rico a un valor entero
     CALL CONVERTIR_ASCII_A_NUM
-    STS NUMERORECIBIDO, R16 ; Guardar el número recibido
+    STS NUMERORECIBIDO, R16 ; Guardar el nï¿½mero recibido
     ; Enviar mensaje "ES NUMERO"
     LDI ZH, HIGH(2*frase12)
     LDI ZL, LOW(2*frase12)
@@ -455,7 +437,7 @@ ES_NUMERO:
     RJMP GUARDAR_NUMERO
 
 ES_MAYUSCULA:
-    ; Comparar con letras específicas
+    ; Comparar con letras especï¿½ficas
     CPI R17, 'C'
     BREQ GUARDAR_UMBRAL_CO
     CPI R17, 'T'
@@ -521,7 +503,7 @@ GUARDAR_UMBRAL_PARTICULAS:
     
 
 GUARDAR_NUMERO:
-    ; Verificar el valor del contador para determinar qué dígito se está recibiendo
+    ; Verificar el valor del contador para determinar quï¿½ dï¿½gito se estï¿½ recibiendo
     LDS R16, salto_contador ; Leer el contador desde la RAM
 
     CPI R16, 1              ; Si el contador es 1, es la centena
@@ -533,13 +515,13 @@ GUARDAR_NUMERO:
     CPI R16, 3              ; Si el contador es 3, es la unidad
     BREQ RECIBIR_UNIDAD
 
-    RJMP FIN_GUARDAR_NUMERO ; Si el contador no es válido, salir
+    RJMP FIN_GUARDAR_NUMERO ; Si el contador no es vï¿½lido, salir
 
 RECIBIR_CENTENA:
-    ; Multiplicar el número recibido por 100 y guardarlo en la RAM
-    LDS R17, NUMERORECIBIDO ; Cargar el número recibido
+    ; Multiplicar el nï¿½mero recibido por 100 y guardarlo en la RAM
+    LDS R17, NUMERORECIBIDO ; Cargar el nï¿½mero recibido
     LDI R18, 100            ; Cargar el valor 100
-    MUL R17, R18            ; Multiplicar R17 (número recibido) por 100
+    MUL R17, R18            ; Multiplicar R17 (nï¿½mero recibido) por 100
     MOVW R24, R0            ; Guardar el resultado en R24:R25
     STS GUARDAR_NUMERO, R24 ; Guardar la parte baja en la RAM
     CLR R25                 ; Asegurarse de que la parte alta sea 0
@@ -549,10 +531,10 @@ RECIBIR_CENTENA:
     RJMP FIN_GUARDAR_NUMERO
 
 RECIBIR_DECENA:
-    ; Multiplicar el número recibido por 10 y sumarlo a la centena
-    LDS R17, NUMERORECIBIDO ; Cargar el número recibido
+    ; Multiplicar el nï¿½mero recibido por 10 y sumarlo a la centena
+    LDS R17, NUMERORECIBIDO ; Cargar el nï¿½mero recibido
     LDI R18, 10             ; Cargar el valor 10
-    MUL R17, R18            ; Multiplicar R17 (número recibido) por 10
+    MUL R17, R18            ; Multiplicar R17 (nï¿½mero recibido) por 10
     MOVW R22, R0            ; Guardar el resultado en R22:R23
     LDS R24, GUARDAR_NUMERO ; Cargar el valor actual de la RAM
     LDS R25, GUARDAR_NUMERO+1
@@ -565,11 +547,11 @@ RECIBIR_DECENA:
     RJMP FIN_GUARDAR_NUMERO
 
 RECIBIR_UNIDAD:
-    ; Sumar el número recibido directamente a la RAM
-    LDS R17, NUMERORECIBIDO ; Cargar el número recibido
+    ; Sumar el nï¿½mero recibido directamente a la RAM
+    LDS R17, NUMERORECIBIDO ; Cargar el nï¿½mero recibido
     LDS R24, GUARDAR_NUMERO ; Cargar el valor actual de la RAM
     LDS R25, GUARDAR_NUMERO+1
-    ADD R24, R17            ; Sumar el número recibido
+    ADD R24, R17            ; Sumar el nï¿½mero recibido
     STS GUARDAR_NUMERO, R24 ; Guardar el resultado en la RAM
     STS GUARDAR_NUMERO+1, R25
     CLR R16                 ; Reiniciar el contador a 0
@@ -578,7 +560,7 @@ RECIBIR_UNIDAD:
 
 FIN_GUARDAR_NUMERO:
 
-; Verificar qué letra está en dato_recibido para determinar el umbral a modificar
+; Verificar quï¿½ letra estï¿½ en dato_recibido para determinar el umbral a modificar
     LDS R16, dato_recibido ; Cargar la letra recibida en R16
 
     CPI R16,67           ; Comparar con 'C' (Umbral de aviso de CO)
@@ -593,7 +575,7 @@ FIN_GUARDAR_NUMERO:
     CPI R16,72           ; Comparar con 'H' (Umbral de aviso de Humedad)
     BREQ GUARDAR_UMBRAL_HUMEDAD
 
-    CPI R16,80           ; Comparar con 'P' (Umbral de aviso de Partículas)
+    CPI R16,80           ; Comparar con 'P' (Umbral de aviso de Partï¿½culas)
     BREQ GUARDAR_UMBRAL_PARTICULAS
 
     RJMP FIN               ; Si no coincide con ninguna letra, salir
